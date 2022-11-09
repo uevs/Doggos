@@ -18,6 +18,7 @@ class MainViewController: UITableViewController {
     func setupUI() {
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.title = "Doggos"
+        var data = DataGetter()
         
     }
     

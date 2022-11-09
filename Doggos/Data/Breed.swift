@@ -7,13 +7,14 @@
 
 import Foundation
 
-struct Breeds {
-    let all: [String: [String]]
-    let status: String
+protocol ApiResult: Decodable {
 }
 
-struct Dogs {
-    let list: [String]
-    let status: String
+struct Breeds: ApiResult {
+    var message: [String: [String]]
+}
+
+struct Dogs: ApiResult {
+    var message: [String]
 }
 
