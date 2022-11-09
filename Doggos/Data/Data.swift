@@ -1,11 +1,9 @@
 //
-//  Breed.swift
+//  Data.swift
 //  Doggos
 //
 //  Created by leonardo on 09/11/22.
 //
-
-import Foundation
 
 protocol ApiResult: Decodable {
 }

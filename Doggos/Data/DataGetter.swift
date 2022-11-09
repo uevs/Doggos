@@ -17,16 +17,6 @@ class DataGetter {
     init() {
         guard let unwrappedUrl = try URLComponents(string: endpoint) else { fatalError("Wrong URL") }
         api = unwrappedUrl
-        
-        Task {
-            print("Test")
-            print("Getting all breeds")
-            await fetchBreeds()
-            print("Getting Hound images")
-            await fetchDogs(breed: "hound")
-            print("Getting Hound sub-breeds")
-            await fetchSubBreeds(breed: "hound")
-        }
     }
     
     enum DataError: Error {
@@ -49,33 +39,44 @@ class DataGetter {
         return result
     }
     
-    func fetchBreeds() async {
+//    func fetchData<T: ApiResult>(path: String) async -> T {
+//        api.path = path
+//        do {
+//            return try await getData(url: api.url!)
+//        }
+//        catch {
+//            print(error)
+//        }
+//        return
+//    }
+    
+    func fetchBreeds() async -> [String: [String]] {
         api.path = "/api/breeds/list/all"
         do {
-            var result: Breeds = try await getData(url: api.url!)
-            print(result)
+            let result: Breeds = try await getData(url: api.url!)
+            return result.message
         }
         catch {
             print(error)
         }
+        return [:]
     }
     
     func fetchDogs(breed: String) async  {
         api.path = "/api/breed/\(breed)/images"
         do {
-            var result: Dogs = try await getData(url: api.url!)
+            let result: Dogs = try await getData(url: api.url!)
             print(result)
         }
         catch {
             print(error)
         }
-        
     }
     
     func fetchSubBreeds(breed: String) async {
         api.path = "/api/breed/\(breed)/list"
         do {
-            var result: Dogs = try await getData(url: api.url!)
+            let result: Dogs = try await getData(url: api.url!)
             print(result)
         }
         catch {

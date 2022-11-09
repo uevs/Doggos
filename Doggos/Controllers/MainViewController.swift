@@ -10,6 +10,8 @@ import UIKit
 
 class MainViewController: UITableViewController {
     
+    let data = DataStore(dataGetter: DataGetter())
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -18,9 +20,12 @@ class MainViewController: UITableViewController {
     func setupUI() {
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.title = "Doggos"
-        var data = DataGetter()
-        
+                
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "star.circle.fill"), style: .plain, target: self, action: #selector(goToFavorites))
     }
     
     
+    @objc func goToFavorites() {
+
+    }
 }
