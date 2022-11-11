@@ -21,7 +21,7 @@ class DataGetter {
     
     enum DataError: Error {
         case cantDecode;
-        case badResponse
+        case badResponse(response: URLResponse)
     }
     
     func getData<T: ApiResult>(url: URL) async throws -> T {
@@ -29,7 +29,7 @@ class DataGetter {
         let (data, response) = try await URLSession.shared.data(from: url)
         
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-            throw DataError.badResponse
+            throw DataError.badResponse(response: response)
         }
         
         guard let result = try? decoder.decode(T.self, from: data) else {
@@ -38,17 +38,6 @@ class DataGetter {
         
         return result
     }
-    
-//    func fetchData<T: ApiResult>(path: String) async -> T {
-//        api.path = path
-//        do {
-//            return try await getData(url: api.url!)
-//        }
-//        catch {
-//            print(error)
-//        }
-//        return
-//    }
     
     func fetchBreeds() async -> [String: [String]] {
         api.path = "/api/breeds/list/all"
@@ -62,14 +51,16 @@ class DataGetter {
         return [:]
     }
     
-    func fetchDogs(breed: String) async  {
+    func fetchDogs(breed: String) async  -> [String] {
         api.path = "/api/breed/\(breed)/images"
         do {
             let result: Dogs = try await getData(url: api.url!)
+            return result.message
         }
         catch {
             print(error)
         }
+        return []
     }
     
     func fetchSubBreeds(breed: String) async {

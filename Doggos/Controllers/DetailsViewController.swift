@@ -10,22 +10,21 @@ import UIKit
 
 class DetailsViewController: UICollectionViewController {
     
+    var data: DataStore
+    
     var breed: String
-    var images: [String]
+    var images: [String] = []
     var subBreeds: [String]
     
     var layout: UICollectionViewFlowLayout
     
-    init(breed: String, images: [String], subBreeds: [String]) {
+    init(data: DataStore, breed: String, subBreeds: [String]) {
         layout = UICollectionViewFlowLayout()
+        self.data = data
         self.breed = breed
-        self.images = images
         self.subBreeds = subBreeds
         super.init(collectionViewLayout: layout)
         
-        print("this is a \(breed)")
-        print("these are the images \(images)")
-        print("these are the sub-breeds \(subBreeds)")
     }
     
     required init?(coder: NSCoder) {
@@ -46,12 +45,19 @@ class DetailsViewController: UICollectionViewController {
     
     
     override func viewDidLoad() {
+        if data.breedImages[breed] == nil {
+            Task {
+                images = await data.getImages(breed:breed.lowercased())
+            }
+        } else {
+            images = data.breeds[breed]!
+        }
+        
         super.viewDidLoad()
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
         self.collectionView.alwaysBounceVertical = true
         self.title = breed
-        
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

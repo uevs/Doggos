@@ -10,9 +10,20 @@ import UIKit
 
 class MainViewController: UITableViewController {
     
-    let data = DataStore(dataGetter: DataGetter())
+    var data: DataStore
+    
+    
+    init(data: DataStore) {
+        self.data = data
+        super.init(style: .plain)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
+        while !data.isInitialized {}
         super.viewDidLoad()
         setupUI()
     }
@@ -40,13 +51,19 @@ class MainViewController: UITableViewController {
         let breed = Array(data.breeds.keys.sorted())[indexPath.row]
         cell.configure(breed.capitalized)
         
+        if !data.breeds.contains(where: {$0.key == breed}) {
+            Task {
+                await data.dataGetter.fetchDogs(breed: breed)
+            }
+        }
+    
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let currentBreed = Array(data.breeds.keys.sorted())[indexPath.row]
-        
-        let detailsViewController = DetailsViewController(breed: currentBreed.capitalized, images: [], subBreeds: data.breeds[currentBreed] ?? [])
+
+        let detailsViewController = DetailsViewController(data: data, breed: currentBreed.capitalized, subBreeds: data.breeds[currentBreed] ?? [])
         
         navigationController?.pushViewController(detailsViewController, animated: true)
     }
