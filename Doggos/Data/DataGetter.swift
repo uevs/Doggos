@@ -66,7 +66,6 @@ class DataGetter {
         api.path = "/api/breed/\(breed)/images"
         do {
             let result: Dogs = try await getData(url: api.url!)
-            print(result)
         }
         catch {
             print(error)
@@ -77,7 +76,6 @@ class DataGetter {
         api.path = "/api/breed/\(breed)/list"
         do {
             let result: Dogs = try await getData(url: api.url!)
-            print(result)
         }
         catch {
             print(error)

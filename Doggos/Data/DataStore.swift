@@ -32,23 +32,18 @@ class DataStore {
     }
     
     func setup() async {
-        print("setting up...")
         breeds = await dataGetter.fetchBreeds()
         userDefaults.set(true, forKey: "isInitialized")
         userDefaults.set(breeds, forKey: "breedsList")
         isInitialized = true
-        print(breeds)
     }
     
     func update() async {
-        print("fetching from local storage...")
         breeds = (userDefaults.dictionary(forKey: "breedsList") ?? [:]) as! [String: [String]]
         
         if breeds.isEmpty {
-            print("Can't find breeds, setting up again")
             await setup()
         }
-        print(breeds)
         
         // check if enough time has passed, if so fetch again
         
