@@ -23,9 +23,11 @@ class MainViewController: UITableViewController {
     }
     
     override func viewDidLoad() {
-//        while !data.isInitialized {}
         super.viewDidLoad()
         setupUI()
+        Task {
+            await data.setup { self.tableView.reloadData() }
+        }
     }
     
     func setupUI() {
@@ -49,26 +51,20 @@ class MainViewController: UITableViewController {
         }
         
         let breed = Array(data.breedsNames.keys.sorted())[indexPath.row]
-        cell.configure(breed.capitalized)
+        cell.configure(breed)
         
-        if !data.breedsNames.contains(where: {$0.key == breed}) {
-            Task {
-                await data.fetchDogs(breed: breed)
-            }
-        }
-    
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let currentBreed = Array(data.breedsNames.keys.sorted())[indexPath.row]
-
-        let detailsViewController = DetailsViewController(data: data, breed: currentBreed.capitalized, subBreeds: data.breedsNames[currentBreed] ?? [])
+        
+        let detailsViewController = DetailsViewController(data: data, breed: currentBreed, subBreeds: data.breedsNames[currentBreed] ?? [])
         
         navigationController?.pushViewController(detailsViewController, animated: true)
     }
     
     @objc func goToFavorites() {
-
+        
     }
 }

@@ -13,7 +13,7 @@ class DetailsViewController: UICollectionViewController {
     var data: DataManager
     
     var breed: String
-    var images: [String] = []
+    var imagesURLs: [String] = []
     var subBreeds: [String]
     
     var layout: UICollectionViewFlowLayout
@@ -45,19 +45,18 @@ class DetailsViewController: UICollectionViewController {
     
     
     override func viewDidLoad() {
-//        if data.breedImages[breed] == nil {
-//            Task {
-//                images = await data.getImagesURL(breed:breed.lowercased())
-//            }
-//        } else {
-//            images = data.breeds[breed]!
-//        }
-        
         super.viewDidLoad()
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
         self.collectionView.alwaysBounceVertical = true
-        self.title = breed
+        self.title = breed.capitalized
+        
+        Task {
+            await data.setupBreedView(breed: self.breed) {
+                self.imagesURLs = self.data.breedImagesURL[self.breed]!
+                self.collectionView.reloadData()
+            }
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -69,7 +68,7 @@ class DetailsViewController: UICollectionViewController {
     
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        images.count
+        imagesURLs.count
     }
     
     

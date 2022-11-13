@@ -27,7 +27,7 @@ class DogCell: UITableViewCell {
     
     
     func configure(_ data: String) {
-        breedLabel.text = data
+        breedLabel.text = data.capitalized
         contentView.addSubview(breedLabel)
 
         breedLabel.widthAnchor.constraint(equalToConstant: 200).isActive = true

@@ -24,7 +24,6 @@ class DataManager {
     init() {
         guard let unwrappedUrl = try URLComponents(string: endpoint) else { fatalError("Wrong URL") }
         api = unwrappedUrl
-        setup()
     }
     
     enum DataError: Error {
@@ -32,31 +31,33 @@ class DataManager {
         case badResponse(response: URLResponse)
     }
     
-    private func setup() {
+    @MainActor
+    func setup(completion: @escaping () -> (Void)) async {
         
         /// Check if there are Breed names on userdefaults and load them
         breedsNames = userDefaults.object(forKey: "breedsNames") as? [String: [String]] ?? [:]
         
         if breedsNames.isEmpty {
-            Task {
-                breedsNames = await fetchBreeds()
-                userDefaults.set(breedsNames, forKey: "breedsNames")
-            }
+            breedsNames = await fetchBreeds()
+            userDefaults.set(breedsNames, forKey: "breedsNames")
+            completion()
+        } else {
+            completion()
         }
-        
-        /// Check if there are images urls on userdefaults and load them
-        print("breedimageurls")
-        breedImagesURL = userDefaults.object(forKey: "breedImagesURL") as? [String: [String]] ?? [:]
-        
         
         /// Check if there are image caches in userdefautls and load them
 //        breedImages = userDefaults.object(forKey: "breedImages") as? NSCache<NSString, NSArray> ?? NSCache<NSString, NSArray>()
         
     }
     
+    @MainActor
+    func setupBreedView(breed: String, completion: @escaping () -> (Void)) async {
+        breedImagesURL[breed] = await fetchBreedImagesURLs(breed: breed)
+        completion()
+    }
+    
     
     private func getData<T: ApiResult>(url: URL) async throws -> T {
-        
         let (data, response) = try await URLSession.shared.data(from: url)
         
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
@@ -69,7 +70,7 @@ class DataManager {
         
         return result
     }
-    
+        
     func fetchBreeds() async -> [String: [String]] {
         api.path = "/api/breeds/list/all"
         do {
@@ -82,7 +83,7 @@ class DataManager {
         return [:]
     }
     
-    func fetchDogs(breed: String) async  -> [String] {
+    func fetchBreedImagesURLs(breed: String) async  -> [String] {
         api.path = "/api/breed/\(breed)/images"
         do {
             let result: Dogs = try await getData(url: api.url!)
@@ -94,15 +95,10 @@ class DataManager {
         return []
     }
     
-    func fetchSubBreeds(breed: String) async {
-        api.path = "/api/breed/\(breed)/list"
-        do {
-            let result: Dogs = try await getData(url: api.url!)
-        }
-        catch {
-            print(error)
-        }
+    func fetchImage(breed: String, completion: @escaping () -> (Void)) async -> UIImage {
+        return UIImage()
     }
+    
     
     
 }
