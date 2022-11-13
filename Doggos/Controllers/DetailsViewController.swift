@@ -97,16 +97,16 @@ class DetailsViewController: UICollectionViewController, UICollectionViewDelegat
     
     
     @objc func zoomIn() {
-        if DataManager.magnification < 5 {
-            DataManager.magnification += 1
+        if DataManager.magnification > 1 {
+            DataManager.magnification -= 1
             collectionView.reloadData()
         }
 
     }
     
     @objc func zoomOut() {
-        if DataManager.magnification > 1 {
-            DataManager.magnification -= 1
+        if DataManager.magnification < 5 {
+            DataManager.magnification += 1
             collectionView.reloadData()
         }
         
