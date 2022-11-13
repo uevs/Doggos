@@ -70,6 +70,17 @@ class DataManager {
         
         return result
     }
+    
+    func getImage(url: String, completion: @escaping () -> (Void)) async throws -> UIImage {
+        let (data, response) = try await URLSession.shared.data(from: URL(string: url)!)
+        
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            return UIImage(systemName: "picture")!
+            throw DataError.badResponse(response: response)
+        }
+        
+        return UIImage(data: data) ?? UIImage(systemName: "picture")!
+    }
         
     func fetchBreeds() async -> [String: [String]] {
         api.path = "/api/breeds/list/all"
@@ -95,9 +106,7 @@ class DataManager {
         return []
     }
     
-    func fetchImage(breed: String, completion: @escaping () -> (Void)) async -> UIImage {
-        return UIImage()
-    }
+
     
     
     

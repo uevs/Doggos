@@ -32,13 +32,13 @@ class DetailsViewController: UICollectionViewController {
     }
     
     override func loadView() {
-        layout.itemSize = CGSize(width: UIScreen.main.bounds.width/3, height: UIScreen.main.bounds.width/3)
+        layout.itemSize = CGSize(width: UIScreen.main.bounds.width/2, height: UIScreen.main.bounds.width/2)
         layout.scrollDirection = .vertical
         layout.minimumInteritemSpacing = .zero
         layout.minimumLineSpacing = .zero
         
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        self.collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        self.collectionView.register(DogDetailCell.self, forCellWithReuseIdentifier: "cell")
         
         self.view = collectionView
     }
@@ -59,10 +59,26 @@ class DetailsViewController: UICollectionViewController {
         }
     }
     
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-//        let breed = Array(data.breeds.keys.sorted())[indexPath.row]
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> DogDetailCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! DogDetailCell
+        
+        let url = imagesURLs[indexPath.row]
+        
+        cell.configure()
+        cell.dogImage.image = nil
+        
+        Task {
+            do  {
+                cell.dogImage.image = try await data.getImage(url: url, completion: {
+                    collectionView.reloadData()
+                })
+            } catch {
+                
+            }
 
+        }
+        
+        
         return cell
     }
     
