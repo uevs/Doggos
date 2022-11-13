@@ -10,7 +10,7 @@ import UIKit
 
 class DetailsViewController: UICollectionViewController {
     
-    var data: DataStore
+    var data: DataManager
     
     var breed: String
     var images: [String] = []
@@ -18,7 +18,7 @@ class DetailsViewController: UICollectionViewController {
     
     var layout: UICollectionViewFlowLayout
     
-    init(data: DataStore, breed: String, subBreeds: [String]) {
+    init(data: DataManager, breed: String, subBreeds: [String]) {
         layout = UICollectionViewFlowLayout()
         self.data = data
         self.breed = breed
@@ -45,13 +45,13 @@ class DetailsViewController: UICollectionViewController {
     
     
     override func viewDidLoad() {
-        if data.breedImages[breed] == nil {
-            Task {
-                images = await data.getImagesURL(breed:breed.lowercased())
-            }
-        } else {
-            images = data.breeds[breed]!
-        }
+//        if data.breedImages[breed] == nil {
+//            Task {
+//                images = await data.getImagesURL(breed:breed.lowercased())
+//            }
+//        } else {
+//            images = data.breeds[breed]!
+//        }
         
         super.viewDidLoad()
         self.collectionView.dataSource = self
@@ -62,7 +62,7 @@ class DetailsViewController: UICollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        let breed = Array(data.breeds.keys.sorted())[indexPath.row]
+//        let breed = Array(data.breeds.keys.sorted())[indexPath.row]
 
         return cell
     }

@@ -10,10 +10,10 @@ import UIKit
 
 class MainViewController: UITableViewController {
     
-    var data: DataStore
+    var data: DataManager
     
     
-    init(data: DataStore) {
+    init(data: DataManager) {
         self.data = data
         super.init(style: .plain)
     }
@@ -23,7 +23,7 @@ class MainViewController: UITableViewController {
     }
     
     override func viewDidLoad() {
-        while !data.isInitialized {}
+//        while !data.isInitialized {}
         super.viewDidLoad()
         setupUI()
     }
@@ -36,7 +36,7 @@ class MainViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        data.breeds.count
+        data.breedsNames.count
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -48,12 +48,12 @@ class MainViewController: UITableViewController {
             fatalError("DogCell is not defined!")
         }
         
-        let breed = Array(data.breeds.keys.sorted())[indexPath.row]
+        let breed = Array(data.breedsNames.keys.sorted())[indexPath.row]
         cell.configure(breed.capitalized)
         
-        if !data.breeds.contains(where: {$0.key == breed}) {
+        if !data.breedsNames.contains(where: {$0.key == breed}) {
             Task {
-                await data.dataGetter.fetchDogs(breed: breed)
+                await data.fetchDogs(breed: breed)
             }
         }
     
@@ -61,9 +61,9 @@ class MainViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let currentBreed = Array(data.breeds.keys.sorted())[indexPath.row]
+        let currentBreed = Array(data.breedsNames.keys.sorted())[indexPath.row]
 
-        let detailsViewController = DetailsViewController(data: data, breed: currentBreed.capitalized, subBreeds: data.breeds[currentBreed] ?? [])
+        let detailsViewController = DetailsViewController(data: data, breed: currentBreed.capitalized, subBreeds: data.breedsNames[currentBreed] ?? [])
         
         navigationController?.pushViewController(detailsViewController, animated: true)
     }
