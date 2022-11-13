@@ -26,10 +26,12 @@ class DogDetailCell: UICollectionViewCell {
         dogImage.contentMode = .scaleAspectFill
         
         contentView.addSubview(dogImage)
-
-        dogImage.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width/2).isActive = true
-        dogImage.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.width/2).isActive = true
-
+        
+        dogImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+        dogImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
+        dogImage.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+        dogImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
     }
+    
     
 }

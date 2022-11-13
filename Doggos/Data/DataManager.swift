@@ -21,6 +21,8 @@ class DataManager {
     private let userDefaults = UserDefaults.standard
     private let decoder = JSONDecoder()
     
+    static var magnification: CGFloat = 2
+    
     init() {
         guard let unwrappedUrl = try URLComponents(string: endpoint) else { fatalError("Wrong URL") }
         api = unwrappedUrl

@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class DetailsViewController: UICollectionViewController {
+class DetailsViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     var data: DataManager
     
@@ -32,13 +32,19 @@ class DetailsViewController: UICollectionViewController {
     }
     
     override func loadView() {
-        layout.itemSize = CGSize(width: UIScreen.main.bounds.width/2, height: UIScreen.main.bounds.width/2)
+        layout.itemSize = CGSize(width: UIScreen.main.bounds.width/DataManager.magnification, height: UIScreen.main.bounds.width/DataManager.magnification)
         layout.scrollDirection = .vertical
         layout.minimumInteritemSpacing = .zero
         layout.minimumLineSpacing = .zero
         
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         self.collectionView.register(DogDetailCell.self, forCellWithReuseIdentifier: "cell")
+        
+        let plus = UIBarButtonItem(image: UIImage(systemName: "plus.magnifyingglass"), style: .plain, target: self, action: #selector(zoomIn))
+        let minus = UIBarButtonItem(image: UIImage(systemName: "minus.magnifyingglass"), style: .plain, target: self, action: #selector(zoomOut))
+
+        navigationItem.rightBarButtonItems = [plus, minus]
+        
         
         self.view = collectionView
     }
@@ -77,8 +83,6 @@ class DetailsViewController: UICollectionViewController {
             }
 
         }
-        
-        
         return cell
     }
     
@@ -87,6 +91,26 @@ class DetailsViewController: UICollectionViewController {
         imagesURLs.count
     }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: UIScreen.main.bounds.width/DataManager.magnification, height: UIScreen.main.bounds.width/DataManager.magnification)
+    }
+    
+    
+    @objc func zoomIn() {
+        if DataManager.magnification < 5 {
+            DataManager.magnification += 1
+            collectionView.reloadData()
+        }
+
+    }
+    
+    @objc func zoomOut() {
+        if DataManager.magnification > 1 {
+            DataManager.magnification -= 1
+            collectionView.reloadData()
+        }
+        
+    }
     
 }
 
