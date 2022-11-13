@@ -6,13 +6,16 @@
 //
 
 import Foundation
+import UIKit
 
 class DataGetter {
     
-    let endpoint: String = "https://dog.ceo"
-    var api: URLComponents
+    private let endpoint: String = "https://dog.ceo"
+    private var api: URLComponents
     
-    let decoder = JSONDecoder()
+    private let decoder = JSONDecoder()
+    
+    private let cachedImages = NSCache<NSURL, UIImage>()
     
     init() {
         guard let unwrappedUrl = try URLComponents(string: endpoint) else { fatalError("Wrong URL") }
@@ -24,7 +27,7 @@ class DataGetter {
         case badResponse(response: URLResponse)
     }
     
-    func getData<T: ApiResult>(url: URL) async throws -> T {
+    private func getData<T: ApiResult>(url: URL) async throws -> T {
         
         let (data, response) = try await URLSession.shared.data(from: url)
         
@@ -73,9 +76,18 @@ class DataGetter {
         }
     }
     
-    func fetchRandomImage() async {
+    func loadImage(url: NSURL, breed: String) async throws -> UIImage{
+        // ???
+        let (data, response) = try await URLSession.shared.data(from: url as URL)
+        
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw DataError.badResponse(response: response)
+        }
+        
+        let image = UIImage(data: data)!
+        return image
+        
         
     }
-    
     
 }

@@ -47,7 +47,7 @@ class DetailsViewController: UICollectionViewController {
     override func viewDidLoad() {
         if data.breedImages[breed] == nil {
             Task {
-                images = await data.getImages(breed:breed.lowercased())
+                images = await data.getImagesURL(breed:breed.lowercased())
             }
         } else {
             images = data.breeds[breed]!
@@ -62,6 +62,7 @@ class DetailsViewController: UICollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+        let breed = Array(data.breeds.keys.sorted())[indexPath.row]
 
         return cell
     }

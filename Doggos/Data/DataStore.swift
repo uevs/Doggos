@@ -6,17 +6,19 @@
 //
 
 import Foundation
+import UIKit
 
 class DataStore {
     
     let dataGetter: DataGetter
     
-    let userDefaults = UserDefaults.standard
+    private let userDefaults = UserDefaults.standard
     
-    var breeds: [String: [String]] = [:]
-    var breedImages: [String: [String]] = [:]
+    private(set) var breeds: [String: [String]] = [:]
+    private(set) var breedImagesURL: [String: [String]] = [:]
+    private(set) var breedImages = NSCache<NSString, NSArray>()
     
-    var isInitialized: Bool
+    private(set) var isInitialized: Bool
     
     init(dataGetter: DataGetter) {
         self.dataGetter = dataGetter
@@ -32,16 +34,16 @@ class DataStore {
         }
     }
     
-    func setup() async {
+    private func setup() async {
         print("initializing app")
         breeds = await dataGetter.fetchBreeds()
         userDefaults.set(true, forKey: "isInitialized")
         userDefaults.set(breeds, forKey: "breedsList")
         isInitialized = true
-        await setupImages()
+        await setupImagesURL()
     }
     
-    func update() async {
+    private func update() async {
         breeds = (userDefaults.dictionary(forKey: "breedsList") ?? [:]) as! [String: [String]]
         
         if breeds.isEmpty {
@@ -52,21 +54,21 @@ class DataStore {
         
     }
     
-    func setupImages() async {
+    private func setupImagesURL() async {
         if !breeds.isEmpty {
             for i in 0...14 {
                 let current = Array(breeds.keys).sorted()[i]
                 print("Fetching breed \(i) of 14: \(current)")
                 let images = await dataGetter.fetchDogs(breed: current)
                 userDefaults.set(images, forKey: current)
-                breedImages[current] = images
+                breedImagesURL[current] = images
             }
         } else {
             await setup()
         }
     }
     
-    func getImages(breed: String) async -> [String] {
+    func getImagesURL(breed: String) async -> [String] {
         print("")
         print("Fetching \(breed) images")
         var images = (userDefaults.object(forKey: breed) ?? []) as! [String]
@@ -76,13 +78,13 @@ class DataStore {
         if images.isEmpty {
             print("UserDefaults doesn't contain \(breed). Fetching online")
             images = await dataGetter.fetchDogs(breed: breed)
-            breedImages[breed] = images
+            breedImagesURL[breed] = images
             userDefaults.set(images, forKey: breed)
             return images
             
         } else {
             print("Found \(breed) on userdefaults.")
-            breedImages[breed] = images
+            breedImagesURL[breed] = images
             return images
         }
     }
