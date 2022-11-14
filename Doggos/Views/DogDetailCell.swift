@@ -1,5 +1,5 @@
 //
-//  DogDetail.swift
+//  DogDetailCell.swift
 //  Doggos
 //
 //  Created by leonardo on 10/11/22.
@@ -7,10 +7,6 @@
 
 import Foundation
 import UIKit
-
-class DogDetailView: UICollectionView {
-    
-}
 
 class DogDetailCell: UICollectionViewCell {
     
@@ -31,6 +27,10 @@ class DogDetailCell: UICollectionViewCell {
 
         return imageView
     }()
+    
+    func reset() {
+        favoriteIcon.layer.opacity = isFavorite ? 1 : 0
+    }
     
     func toggleFavorite() {
         isFavorite.toggle()

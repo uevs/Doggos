@@ -74,10 +74,12 @@ class DetailsViewController: UICollectionViewController, UICollectionViewDelegat
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> DogDetailCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! DogDetailCell
         
+        cell.dogImage.image = nil
+
         let url = imagesURLs[indexPath.row]
         cell.isFavorite = data.favorites.contains(url)
+        cell.reset()
         cell.configure()
-        cell.dogImage.image = nil
 
         Task {
             do  {

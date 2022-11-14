@@ -33,7 +33,7 @@ class MainViewController: UITableViewController {
     func setupUI() {
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.title = "Doggos"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "star.circle.fill"), style: .plain, target: self, action: #selector(goToFavorites))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "heart.circle"), style: .plain, target: self, action: #selector(goToFavorites))
         tableView.register(DogCell.self, forCellReuseIdentifier: "DogCell")
     }
     
