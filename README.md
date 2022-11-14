@@ -10,7 +10,7 @@
 
 A simple **UIKit** app that connects to the [Dog API](https://dog.ceo/dog-api/) and shows dogs images divided by breeds, allowing the user to save the best pictures to favorites. 
 
-I wrote this app programmatically without using Storyboads and Interface Builder. The app has no dependencies and uses a custom DataManager class to handle networking, caching and data persistance.
+I wrote the app UI programmatically without using Storyboads and Interface Builder. The app has no dependencies and uses a custom DataManager class to handle networking, caching and data persistance.
 
 ### Screenshots
 
