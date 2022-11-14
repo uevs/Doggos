@@ -63,10 +63,15 @@ class DetailsViewController: UICollectionViewController, UICollectionViewDelegat
         self.collectionView.allowsMultipleSelection = true
         self.title = breed.capitalized
         
-        Task {
-            await data.setupBreedView(breed: self.breed) {
-                self.imagesURLs = self.isFavoritesView ? self.data.favorites : self.data.breedImagesURL[self.breed]!
-                self.collectionView.reloadData()
+        if isFavoritesView {
+            self.imagesURLs = self.data.favorites
+            self.collectionView.reloadData()
+        } else {
+            Task {
+                await data.setupBreedView(breed: self.breed) {
+                    self.imagesURLs = self.data.breedImagesURL[self.breed]!
+                    self.collectionView.reloadData()
+                }
             }
         }
     }

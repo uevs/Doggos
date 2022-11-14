@@ -133,11 +133,9 @@ class DataManager {
         if !favorites.contains(url) {
             favorites.append(url)
             userDefaults.set(favorites, forKey: "favorites")
-            print(favorites)
         } else {
             favorites.removeAll(where: {$0 == url})
             userDefaults.set(favorites, forKey: "favorites")
-            print(favorites)
         }
     }
 }
