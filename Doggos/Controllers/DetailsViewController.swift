@@ -10,18 +10,19 @@ import UIKit
 
 class DetailsViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
-    var data: DataManager
+    private var data: DataManager
     
-    var breed: String
-    var imagesURLs: [String] = []
-    var subBreeds: [String]
-    var favoriteIndexes: [IndexPath] = []
+    private var breed: String
+    private var imagesURLs: [String] = []
+    private var subBreeds: [String]
+    private var favoriteIndexes: [IndexPath] = []
     
-    var isFavoritesView: Bool {
+    private var isFavoritesView: Bool {
         return breed == "Favorites"
     }
     
-    var layout: UICollectionViewFlowLayout
+    private var layout: UICollectionViewFlowLayout
+    
     
     init(data: DataManager, breed: String, subBreeds: [String]) {
         layout = UICollectionViewFlowLayout()
@@ -32,9 +33,11 @@ class DetailsViewController: UICollectionViewController, UICollectionViewDelegat
         
     }
     
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     
     override func loadView() {
         layout.itemSize = CGSize(width: UIScreen.main.bounds.width/DataManager.magnification, height: UIScreen.main.bounds.width/DataManager.magnification)
@@ -76,6 +79,7 @@ class DetailsViewController: UICollectionViewController, UICollectionViewDelegat
         }
     }
     
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> DogDetailCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! DogDetailCell
         
@@ -104,6 +108,7 @@ class DetailsViewController: UICollectionViewController, UICollectionViewDelegat
         imagesURLs.count
     }
     
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: UIScreen.main.bounds.width/DataManager.magnification, height: UIScreen.main.bounds.width/DataManager.magnification)
     }
@@ -129,6 +134,7 @@ class DetailsViewController: UICollectionViewController, UICollectionViewDelegat
             collectionView.reloadData()
         }
     }
+    
     
     @objc func zoomOut() {
         if DataManager.magnification < 5 {

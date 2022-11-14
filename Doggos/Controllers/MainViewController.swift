@@ -10,17 +10,18 @@ import UIKit
 
 class MainViewController: UITableViewController {
     
-    var data: DataManager
-    
+    private var data: DataManager
     
     init(data: DataManager) {
         self.data = data
         super.init(style: .plain)
     }
     
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,6 +31,7 @@ class MainViewController: UITableViewController {
         }
     }
     
+    
     func setupUI() {
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.title = "Doggos"
@@ -37,13 +39,16 @@ class MainViewController: UITableViewController {
         tableView.register(DogCell.self, forCellReuseIdentifier: "DogCell")
     }
     
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         data.breedsNames.count
     }
     
+    
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60.0
     }
+    
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "DogCell", for: indexPath) as? DogCell else {
@@ -56,6 +61,7 @@ class MainViewController: UITableViewController {
         return cell
     }
     
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let currentBreed = Array(data.breedsNames.keys.sorted())[indexPath.row]
         
@@ -64,10 +70,10 @@ class MainViewController: UITableViewController {
         navigationController?.pushViewController(detailsViewController, animated: true)
     }
     
+    
     @objc func goToFavorites() {
         let detailsViewController = DetailsViewController(data: data, breed: "Favorites", subBreeds: [])
         
         navigationController?.pushViewController(detailsViewController, animated: true)
-        
     }
 }

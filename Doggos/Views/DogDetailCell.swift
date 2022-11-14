@@ -19,6 +19,7 @@ class DogDetailCell: UICollectionViewCell {
         return imageView
     }()
     
+    
     lazy var favoriteIcon: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "heart.fill")?.withTintColor(.white, renderingMode: .alwaysOriginal)
@@ -28,14 +29,17 @@ class DogDetailCell: UICollectionViewCell {
         return imageView
     }()
     
+    
     func reset() {
         favoriteIcon.layer.opacity = isFavorite ? 1 : 0
     }
+    
     
     func toggleFavorite() {
         isFavorite.toggle()
         favoriteIcon.layer.opacity = isFavorite ? 1 : 0
     }
+    
     
     func configure(){
         favoriteIcon.clipsToBounds = true
@@ -56,6 +60,4 @@ class DogDetailCell: UICollectionViewCell {
         favoriteIcon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
         favoriteIcon.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
     }
-    
-    
 }
