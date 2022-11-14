@@ -13,7 +13,7 @@ class DataManager {
     
     private(set) var breedsNames: [String: [String]] = [:] // [Breed name: [Array of SubBreeds names]
     private(set) var breedImagesURL: [String: [String]] = [:] // [Breed name: [Array of Pics URLS]
-    private(set) var imagesCache = NSCache<NSString, NSMutableDictionary>() //[Breed name: [Array of UImages of that breed]
+    private(set) var imagesCache = NSCache<NSString, NSMutableDictionary>() //[Breed name: [Dict of image data of that breed]
     
     private let endpoint: String = "https://dog.ceo"
     private var api: URLComponents
@@ -131,9 +131,6 @@ class DataManager {
         }
         return []
     }
-    
-
-    
     
     
 }
