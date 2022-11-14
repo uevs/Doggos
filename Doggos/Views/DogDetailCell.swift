@@ -31,6 +31,7 @@ class DogDetailCell: UICollectionViewCell {
     
     
     func reset() {
+        /// Call this function to avoid duplicate favorites when cells are reused.
         favoriteIcon.layer.opacity = isFavorite ? 1 : 0
     }
     

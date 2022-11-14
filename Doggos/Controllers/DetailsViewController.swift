@@ -12,11 +12,11 @@ class DetailsViewController: UICollectionViewController, UICollectionViewDelegat
     
     private var data: DataManager
     
-    private var breed: String
-    private var imagesURLs: [String] = []
-    private var subBreeds: [String]
-    private var favoriteIndexes: [IndexPath] = []
+    private var breed: String /// The current breed displayed in the view's instance
+    private var imagesURLs: [String] = [] /// The URLs from which images will be fetched
+    private var subBreeds: [String] /// SubBreeds, if any
     
+    /// This view can also display as a "Favorites" viw if the breed name given to the init is "Favorites"
     private var isFavoritesView: Bool {
         return breed == "Favorites"
     }
@@ -30,7 +30,6 @@ class DetailsViewController: UICollectionViewController, UICollectionViewDelegat
         self.breed = breed
         self.subBreeds = subBreeds
         super.init(collectionViewLayout: layout)
-        
     }
     
     
@@ -48,11 +47,10 @@ class DetailsViewController: UICollectionViewController, UICollectionViewDelegat
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         self.collectionView.register(DogDetailCell.self, forCellWithReuseIdentifier: "cell")
         
+        /// Cells can be zoomed in or out by the user
         let plus = UIBarButtonItem(image: UIImage(systemName: "plus.magnifyingglass"), style: .plain, target: self, action: #selector(zoomIn))
         let minus = UIBarButtonItem(image: UIImage(systemName: "minus.magnifyingglass"), style: .plain, target: self, action: #selector(zoomOut))
-
         navigationItem.rightBarButtonItems = [plus, minus]
-        
         
         self.view = collectionView
     }
@@ -66,6 +64,7 @@ class DetailsViewController: UICollectionViewController, UICollectionViewDelegat
         self.collectionView.allowsMultipleSelection = true
         self.title = breed.capitalized
         
+        /// If the view is used as a Favorites, it fetches the URLs of Favorites from the data class, otherwise it fetches the breed URLS  from the API.
         if isFavoritesView {
             self.imagesURLs = self.data.favorites
             self.collectionView.reloadData()
@@ -84,21 +83,17 @@ class DetailsViewController: UICollectionViewController, UICollectionViewDelegat
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! DogDetailCell
         
         cell.dogImage.image = nil
-
+        
         let url = imagesURLs[indexPath.row]
         cell.isFavorite = data.favorites.contains(url)
         cell.reset()
         cell.configure()
-
+        
+        /// Gets cell image from the internet/cache.
         Task {
-            do  {
-                cell.dogImage.image = try await data.getImage(breed: breed, url: url, completion: {
-                    collectionView.reloadData()
-                })
-            } catch {
-                
+            cell.dogImage.image = try await data.getImage(breed: breed, url: url) {
+                collectionView.reloadData()
             }
-
         }
         return cell
     }
@@ -126,8 +121,8 @@ class DetailsViewController: UICollectionViewController, UICollectionViewDelegat
         let cell = collectionView.cellForItem(at: indexPath) as! DogDetailCell
         cell.toggleFavorite()
     }
-
-
+    
+    
     @objc func zoomIn() {
         if DataManager.magnification > 1 {
             DataManager.magnification -= 1

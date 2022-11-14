@@ -73,7 +73,7 @@
 		6FD04FA5291A612400CFB113 /* Doggos */ = {
 			isa = PBXGroup;
 			children = (
-				6FEFA053291C04D90048CB9A /* Data */,
+				6FEFA053291C04D90048CB9A /* Model */,
 				6F3CF596291D96EE002B5E64 /* Views */,
 				6FEFA050291C031A0048CB9A /* Controllers */,
 				6FD04FA6291A612400CFB113 /* AppDelegate.swift */,
@@ -94,13 +94,13 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
-		6FEFA053291C04D90048CB9A /* Data */ = {
+		6FEFA053291C04D90048CB9A /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				6FEFA054291C060E0048CB9A /* Data.swift */,
 				6F3CF594291C5C9B002B5E64 /* DataManager.swift */,
 			);
-			path = Data;
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -34,7 +34,7 @@ class MainViewController: UITableViewController {
     
     func setupUI() {
         self.navigationController?.navigationBar.prefersLargeTitles = true
-        self.title = "Doggos"
+        self.title = "Doggos 🐶"
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "heart.circle"), style: .plain, target: self, action: #selector(goToFavorites))
         tableView.register(DogCell.self, forCellReuseIdentifier: "DogCell")
     }
@@ -51,10 +51,7 @@ class MainViewController: UITableViewController {
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "DogCell", for: indexPath) as? DogCell else {
-            fatalError("DogCell is not defined!")
-        }
-        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "DogCell", for: indexPath) as! DogCell
         let breed = Array(data.breedsNames.keys.sorted())[indexPath.row]
         cell.configure(breed)
         
@@ -64,7 +61,6 @@ class MainViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let currentBreed = Array(data.breedsNames.keys.sorted())[indexPath.row]
-        
         let detailsViewController = DetailsViewController(data: data, breed: currentBreed, subBreeds: data.breedsNames[currentBreed] ?? [])
         
         navigationController?.pushViewController(detailsViewController, animated: true)
