@@ -14,6 +14,7 @@ class DataManager {
     private(set) var breedsNames: [String: [String]] = [:] // [Breed name: [Array of SubBreeds names]
     private(set) var breedImagesURL: [String: [String]] = [:] // [Breed name: [Array of Pics URLS]
     private(set) var imagesCache = NSCache<NSString, NSMutableDictionary>() //[Breed name: [Dict of image data of that breed]
+    private(set) var favorites: [String] = [] // Contains urls to favorite images
     
     private let endpoint: String = "https://dog.ceo"
     private var api: URLComponents
@@ -38,6 +39,8 @@ class DataManager {
         
         /// Check if there are Breed names on userdefaults and load them
         breedsNames = userDefaults.object(forKey: "breedsNames") as? [String: [String]] ?? [:]
+        
+        favorites = userDefaults.stringArray(forKey: "favorites") ?? []
         
         if breedsNames.isEmpty {
             breedsNames = await fetchBreeds()
@@ -79,9 +82,7 @@ class DataManager {
         let nsUrl = NSString(string: url)
         
         if let cachedBreed = imagesCache.object(forKey: nsBreed) {
-            print("Found cache for \(breed)")
             if let cachedImage: Data = cachedBreed.object(forKey: url) as? Data {
-                print("Found cached image for \(url)")
                 return UIImage(data: cachedImage)!
             }
         }
@@ -93,14 +94,10 @@ class DataManager {
         }
         
         if let cache = imagesCache.object(forKey: nsBreed) {
-            print("Found cache for \(breed)")
-            print("Adding \(url) to \(breed) cache")
             cache.setValue(data, forKey: url)
             imagesCache.setObject(cache, forKey: nsBreed)
         } else {
-            print("Creating cache for \(breed)")
-            var newCache = NSMutableDictionary()
-            print("Adding \(url) to \(breed) cache")
+            let newCache = NSMutableDictionary()
             newCache.setValue(data, forKey: url)
             imagesCache.setObject(newCache, forKey: nsBreed)
         }
@@ -132,7 +129,17 @@ class DataManager {
         return []
     }
     
-    
+    func toggleFavorite(url: String) {
+        if !favorites.contains(url) {
+            favorites.append(url)
+            userDefaults.set(favorites, forKey: "favorites")
+            print(favorites)
+        } else {
+            favorites.removeAll(where: {$0 == url})
+            userDefaults.set(favorites, forKey: "favorites")
+            print(favorites)
+        }
+    }
 }
 
 

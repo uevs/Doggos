@@ -15,6 +15,11 @@ class DetailsViewController: UICollectionViewController, UICollectionViewDelegat
     var breed: String
     var imagesURLs: [String] = []
     var subBreeds: [String]
+    var favoriteIndexes: [IndexPath] = []
+    
+    var isFavoritesView: Bool {
+        return breed == "Favorites"
+    }
     
     var layout: UICollectionViewFlowLayout
     
@@ -55,11 +60,12 @@ class DetailsViewController: UICollectionViewController, UICollectionViewDelegat
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
         self.collectionView.alwaysBounceVertical = true
+        self.collectionView.allowsMultipleSelection = true
         self.title = breed.capitalized
         
         Task {
             await data.setupBreedView(breed: self.breed) {
-                self.imagesURLs = self.data.breedImagesURL[self.breed]!
+                self.imagesURLs = self.isFavoritesView ? self.data.favorites : self.data.breedImagesURL[self.breed]!
                 self.collectionView.reloadData()
             }
         }
@@ -69,10 +75,10 @@ class DetailsViewController: UICollectionViewController, UICollectionViewDelegat
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! DogDetailCell
         
         let url = imagesURLs[indexPath.row]
-        
+        cell.isFavorite = data.favorites.contains(url)
         cell.configure()
         cell.dogImage.image = nil
-        
+
         Task {
             do  {
                 cell.dogImage.image = try await data.getImage(breed: breed, url: url, completion: {
@@ -96,12 +102,25 @@ class DetailsViewController: UICollectionViewController, UICollectionViewDelegat
     }
     
     
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        data.toggleFavorite(url: imagesURLs[indexPath.row])
+        let cell = collectionView.cellForItem(at: indexPath) as! DogDetailCell
+        cell.toggleFavorite()
+    }
+    
+    
+    override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        data.toggleFavorite(url: imagesURLs[indexPath.row])
+        let cell = collectionView.cellForItem(at: indexPath) as! DogDetailCell
+        cell.toggleFavorite()
+    }
+
+
     @objc func zoomIn() {
         if DataManager.magnification > 1 {
             DataManager.magnification -= 1
             collectionView.reloadData()
         }
-
     }
     
     @objc func zoomOut() {
@@ -109,9 +128,7 @@ class DetailsViewController: UICollectionViewController, UICollectionViewDelegat
             DataManager.magnification += 1
             collectionView.reloadData()
         }
-        
     }
-    
 }
 
 

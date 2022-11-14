@@ -65,6 +65,9 @@ class MainViewController: UITableViewController {
     }
     
     @objc func goToFavorites() {
+        let detailsViewController = DetailsViewController(data: data, breed: "Favorites", subBreeds: [])
+        
+        navigationController?.pushViewController(detailsViewController, animated: true)
         
     }
 }
