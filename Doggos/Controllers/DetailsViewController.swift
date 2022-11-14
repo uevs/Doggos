@@ -75,7 +75,7 @@ class DetailsViewController: UICollectionViewController, UICollectionViewDelegat
         
         Task {
             do  {
-                cell.dogImage.image = try await data.getImage(url: url, completion: {
+                cell.dogImage.image = try await data.getImage(breed: breed, url: url, completion: {
                     collectionView.reloadData()
                 })
             } catch {

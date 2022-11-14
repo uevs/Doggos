@@ -13,7 +13,7 @@ class DataManager {
     
     private(set) var breedsNames: [String: [String]] = [:] // [Breed name: [Array of SubBreeds names]
     private(set) var breedImagesURL: [String: [String]] = [:] // [Breed name: [Array of Pics URLS]
-    private(set) var breedImages = NSCache<NSString, NSArray>() //[Breed name: [Array of UImages of that breed]
+    private(set) var imagesCache = NSCache<NSString, NSMutableDictionary>() //[Breed name: [Array of UImages of that breed]
     
     private let endpoint: String = "https://dog.ceo"
     private var api: URLComponents
@@ -73,15 +73,39 @@ class DataManager {
         return result
     }
     
-    func getImage(url: String, completion: @escaping () -> (Void)) async throws -> UIImage {
+    func getImage(breed: String, url: String, completion: @escaping () -> (Void)) async throws -> UIImage {
+        
+        let nsBreed = NSString(string: breed)
+        let nsUrl = NSString(string: url)
+        
+        if let cachedBreed = imagesCache.object(forKey: nsBreed) {
+            print("Found cache for \(breed)")
+            if let cachedImage: Data = cachedBreed.object(forKey: url) as? Data {
+                print("Found cached image for \(url)")
+                return UIImage(data: cachedImage)!
+            }
+        }
+        
         let (data, response) = try await URLSession.shared.data(from: URL(string: url)!)
         
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-            return UIImage(systemName: "picture")!
             throw DataError.badResponse(response: response)
         }
         
-        return UIImage(data: data) ?? UIImage(systemName: "picture")!
+        if let cache = imagesCache.object(forKey: nsBreed) {
+            print("Found cache for \(breed)")
+            print("Adding \(url) to \(breed) cache")
+            cache.setValue(data, forKey: url)
+            imagesCache.setObject(cache, forKey: nsBreed)
+        } else {
+            print("Creating cache for \(breed)")
+            var newCache = NSMutableDictionary()
+            print("Adding \(url) to \(breed) cache")
+            newCache.setValue(data, forKey: url)
+            imagesCache.setObject(newCache, forKey: nsBreed)
+        }
+        
+        return UIImage(data:data) ?? UIImage(systemName: "wifi.exclamationmark")!
     }
         
     func fetchBreeds() async -> [String: [String]] {
