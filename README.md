@@ -12,3 +12,13 @@ A simple **UIKit** app that connects to the [Dog API](https://dog.ceo/dog-api/) 
 
 I wrote this app programmatically without using Storyboads and Interface Builder. The app has no dependencies and uses a custom DataManager class to handle networking, caching and data persistance.
 
+### Screenshots
+
+<div align="center">
+
+<img width="200" alt="doggos1" src="https://user-images.githubusercontent.com/36189306/201710356-e0db7f08-d696-40ed-bd73-d6894a527704.png">
+<img width="200" alt="doggos2" src="https://user-images.githubusercontent.com/36189306/201710381-b3bd2765-e990-4872-ae4a-32fbf946d2c4.png">
+<img width="200" alt="doggos3" src="https://user-images.githubusercontent.com/36189306/201710394-80b5f1c9-a771-4f15-9c1d-7b404189ceec.png">
+<img width="200" alt="doggos" src="https://user-images.githubusercontent.com/36189306/201710402-79d0f72c-6465-4c73-9836-94ce2411538f.png">
+
+</div>
