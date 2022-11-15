@@ -12,7 +12,7 @@ A simple **UIKit** app that connects to the [Dog API](https://dog.ceo/dog-api/) 
 
 I wrote the app UI programmatically without using Storyboads and Interface Builder. The app has no dependencies and uses a custom DataManager class to handle networking, caching and data persistance.
 
-### Screenshots
+## Screenshots
 
 <div align="center">
 
@@ -22,3 +22,7 @@ I wrote the app UI programmatically without using Storyboads and Interface Build
 <img width="200" alt="doggos" src="https://user-images.githubusercontent.com/36189306/201710402-79d0f72c-6465-4c73-9836-94ce2411538f.png">
 
 </div>
+
+## Available on TestFlight
+
+The app is available for download on TestFlight at [this link](https://testflight.apple.com/join/ennQfU75).
